@@ -27,7 +27,7 @@ const LaunchRequestHandler = {
 //     canHandle(handlerInput) {
 //         return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
 //             (handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-//                 handlerInput.requestEnvelope.request.intent.name === 'GetRemoteDataIntent');   <---- this is saying 'I have to be in launchrequest *and* getremotedataintent' you cannot be in both.
+//                 handlerInput.requestEnvelope.request.intent.name === 'GetRemoteDataIntent');   <---- actually ignore that, I see what you're trying to do, but probably best to keep it a straight launch for now
 //     },
 //     async handle(handlerInput) {
 //         let outputSpeech = 'Welcome to the AWS Fact skill';
