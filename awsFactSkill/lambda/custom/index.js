@@ -7,24 +7,44 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 // Creating an eviornment variable to store DynamoDB table name
 const TABLENAME = process.env.TABLENAME;
 
-const GetRemoteDataHandler = {
+
+
+// let's just make this a basic launch-request just so we can make sure this should fire-up:
+const LaunchRequestHandler = {
     canHandle(handlerInput) {
-        return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
-            (handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-                handlerInput.requestEnvelope.request.intent.name === 'GetRemoteDataIntent');
+        return handlerInput.requestEnvelope.request.type === "LaunchRequest";
     },
-    async handle(handlerInput) {
-        let outputSpeech = 'Welcome to the AWS Fact skill';
-        const attributesManager = handlerInput.attributesManager;
-        const attributes = await attributesManager.getPersistentAttributes();
-        attributes.questionAsked = false;
-        attributesManager.setPersistentAttributes(attributes);
-        await attributesManager.savePersistentAttributes();
+    handle(handlerInput, error) {
+        console.log("IN LAUNCH REQUEST");
         return handlerInput.responseBuilder
-            .speak(outputSpeech)
+            .speak(`Welcome to my skill`)
+            .reprompt(`Welcome to my skill`)
             .getResponse();
-    },
+  },
 };
+
+// const GetRemoteDataHandler = {
+//     canHandle(handlerInput) {
+//         return handlerInput.requestEnvelope.request.type === 'LaunchRequest' ||
+//             (handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
+//                 handlerInput.requestEnvelope.request.intent.name === 'GetRemoteDataIntent');   <---- this is saying 'I have to be in launchrequest *and* getremotedataintent' you cannot be in both.
+//     },
+//     async handle(handlerInput) {
+//         let outputSpeech = 'Welcome to the AWS Fact skill';
+//         const attributesManager = handlerInput.attributesManager;
+//         const attributes = await attributesManager.getPersistentAttributes();
+//         attributes.questionAsked = false;
+//         attributesManager.setPersistentAttributes(attributes);
+//         await attributesManager.savePersistentAttributes();
+//         return handlerInput.responseBuilder
+//             .speak(outputSpeech)
+//             .getResponse();    <-------- Watch my videos, you don't have a .reprompt so you never get any further that this.
+//     },
+// };
+
+
+
+
 const HelpIntentHandler = {
     canHandle(handlerInput) {
         return handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
@@ -103,7 +123,8 @@ exports.handler = skillBuilder
     .addErrorHandlers(ErrorHandler)
     .lambda();
 
-function awsDBGetFact() {
+// I'm going to assume this section works independently and returns a string?
+function awsDBGetFact() {       
     var params = {
         TableName: TABLENAME
     };
